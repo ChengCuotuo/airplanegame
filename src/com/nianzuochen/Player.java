@@ -17,15 +17,19 @@ public class Player extends Pane{
     private double width;       //图片的宽度
     private double height;      //图片的高度
 
-    public Player(ImageView plane, double posX, double posY, double down, double right, double speed) {
-        this.plane = plane;
+    public Player(Image[] images, double posX, double posY, double down, double right, double speed) {
+        this.plane = new ShowImages(images);
+
+        System.out.println(456);
         this.posX = posX;
         this.posY = posY;
         this.down = down;
         this.right = right;
-        this.width = plane.getImage().getWidth();
-        this.height = plane.getImage().getHeight();
+        //这里不能使用 imageView 的 getImage().getWidth() 因为现在的 imageView 中的 image 是动态变化的
+        this.width = images[0].getWidth();
+        this.height = images[0].getHeight();
         this.speed = speed;
+        //设置图片，也就是玩家的初始位置
         super.setPrefSize(right + width, down + height);
         plane.setX(posX);
         plane.setY(posY);
