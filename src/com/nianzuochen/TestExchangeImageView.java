@@ -16,7 +16,11 @@ public class TestExchangeImageView extends Application{
     public void start(Stage primaryStage) {
         Pane pane = new Pane();
         Image[] images = {new Image("image/player1.png"), new Image("image/player2.png")};
-        pane.getChildren().add(new ShowImages(images));
+        Image[] ruinImages = {new Image("image/playerdown1.png"),
+                new Image("image/playerdown2.png"), new Image("image/playerdown3.png")};
+        ShowImages showImages = new ShowImages(images, ruinImages);
+        pane.getChildren().add(showImages);
+        showImages.ruin();
 
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
