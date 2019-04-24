@@ -133,58 +133,6 @@ public class Player extends Pane{
         });
     }
 
-    public ImageView getPlane() {
-        return plane;
-    }
-
-    public void setPlane(ImageView plane) {
-        this.plane = plane;
-    }
-
-    public double getPosX() {
-        return posX;
-    }
-
-    public void setPosX(double posX) {
-        this.posX = posX;
-    }
-
-    public double getPosY() {
-        return posY;
-    }
-
-    public void setPosY(double posY) {
-        this.posY = posY;
-    }
-
-    public double getDown() {
-        return down;
-    }
-
-    public void setDown(double down) {
-        this.down = down;
-    }
-
-    public double getRight() {
-        return right;
-    }
-
-    public void setRight(double right) {
-        this.right = right;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public Image getBullet() {
-        return bullet;
-    }
-
     public void setBullet(Image bullet) {
         this.bullet = bullet;
     }
