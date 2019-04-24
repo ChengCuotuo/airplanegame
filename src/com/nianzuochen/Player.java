@@ -1,8 +1,11 @@
 package com.nianzuochen;
 
+import javafx.animation.PathTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 /**
  * Created by lei02 on 2019/4/22.
@@ -14,9 +17,10 @@ public class Player extends Pane{
     private double down;            //飞机移动的最低位置
     private double right;           //飞机移动的最右边位置
     private double speed;           //飞机的速度，其实就是每次触发事件飞机的移动距离
-    private double width;           //图片的宽度
-    private double height;          //图片的高度
+    private double width;           //飞机图片的宽度
+    private double height;          //飞机图片的高度
     private ShowImages bornImages;  //飞机的动画效果
+    private Image bullet;           //飞机发射的子弹
 
     public Player(Image[] born, Image[] ruin, double posX, double posY, double down, double right, double speed) {
         bornImages = new ShowImages(born, ruin);
@@ -82,6 +86,27 @@ public class Player extends Pane{
         plane.setY(posY);
     }
 
+    //飞机发射子弹动画，如果没有指定的话，将不进行此动画
+    public void launch() {
+        //没有指定子弹照片
+        if (bullet == null) {
+            return ;
+        }
+        //指定子弹的照片
+        //获取子弹照片的大小，飞机此时的坐标
+        double bulletWidth = bullet.getWidth();
+        double bulletHeight = bullet.getHeight();
+        //计算子弹初始位置，也就是在飞机的上方中央位置
+        double bulletX = posX + (bulletWidth - width) / 2;
+        double bulletY = posY + bulletHeight;
+        //子弹由初始位置移动值面板的最顶端
+        // 产生多个子弹是不是需要使用多线程？先不使用试试
+        //动画使用的是路线动画， 路线就是从当前位置到面板的顶端
+        Line path = new Line(bulletX, bulletY, 0, bulletY);
+        PathTransition bulletAnimation = new PathTransition(Duration.millis(1000), path, new ImageView(bullet));
+
+    }
+
     public ImageView getPlane() {
         return plane;
     }
@@ -130,4 +155,11 @@ public class Player extends Pane{
         this.speed = speed;
     }
 
+    public Image getBullet() {
+        return bullet;
+    }
+
+    public void setBullet(Image bullet) {
+        this.bullet = bullet;
+    }
 }
