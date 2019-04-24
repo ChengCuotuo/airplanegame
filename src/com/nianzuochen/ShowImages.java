@@ -19,7 +19,7 @@ public class ShowImages extends ImageView{
     private int ruinIndex;
     private Timeline startAnimation;
     private Timeline ruinAnimation;
-
+    //初始状态和摧毁都是动画
     public ShowImages (Image[] bornImages, Image[] ruinImages) {
         //System.out.print(123);
         this.bornImages = bornImages;
@@ -28,6 +28,13 @@ public class ShowImages extends ImageView{
         this.ruinIndex = 0;
         born ();
     }
+    //摧毁是动画
+    public ShowImages (Image[] ruinImages) {
+        this.ruinImages = ruinImages;
+        this.bornIndex = 0;
+        this.ruinIndex = 0;
+    }
+
     //初始化的动态的飞机
     private void born () {
         int length = bornImages.length;
