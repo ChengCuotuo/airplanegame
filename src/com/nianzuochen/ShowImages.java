@@ -57,7 +57,9 @@ public class ShowImages extends ImageView{
     //飞机摧毁时候的动画
     public void ruin() {
         //初始动画停止
-        startAnimation.stop();
+       if (startAnimation != null) {
+           startAnimation.stop();
+       }
         int length = ruinImages.length;
         //事件的功能是不断的改变 ruinImages 的图片
         EventHandler<ActionEvent> eventHandler = e -> {

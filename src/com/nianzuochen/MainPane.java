@@ -121,10 +121,11 @@ public class MainPane extends Application{
                 double enemyY = enemy.getPosY();
                 double enemyWidth = enemy.getEnemyWidth();
                 double enemyHeight = enemy.getEnemyHeigh();
-                if ((bulletY <= enemyY + enemyHeight) && (bulletX >= enemyX) &&
+                if ((bulletY <= (enemyY + enemyHeight)) && (bulletX >= enemyX) &&
                         ((bulletX + bulletWidth) <= (enemyX + enemyWidth))) {
                     player.getChildren().remove(bullet);
                     enemyBuilder.getChildren().remove(enemy);
+                    //删除被摧毁的飞机和使用的子弹
                     ememys.remove(enemy);
                     bullets.remove(bullet);
                     return ;

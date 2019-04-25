@@ -16,6 +16,7 @@ public class Bullet extends Pane {
     private double bulletY;         //子弹的 y 坐标
     private double bulletWidth;     //子弹图片的宽度
     private int bulletSpeed;        //子弹的速度
+    private Timeline bulletAnimation;   //子弹移动动画
 
     public Bullet (Image bullet, double bulletX, double bulletY, int bulletSpeed) {
         this.bullet = new ImageView(bullet);
@@ -66,7 +67,7 @@ public class Bullet extends Pane {
                 this.bulletY = positionY;
             }
         };
-        Timeline bulletAnimation =
+        bulletAnimation =
                 new Timeline(new KeyFrame(Duration.millis(100), eventHandler));
         bulletAnimation.setCycleCount((int) (bulletY / bulletSpeed));
         bulletAnimation.play();

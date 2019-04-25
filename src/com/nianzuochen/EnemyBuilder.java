@@ -45,8 +45,7 @@ public class EnemyBuilder extends Pane {
         //敌机的图片
         Image enemyBornImage = new Image("image/eplane1.png");
         Image[] enemyRuinImage =
-                {new Image("image/eplane1.png"), new Image("image/eplane2.png"),
-                        new Image("image/eplane3.png")};
+                {new Image("image/eplane2.png"), new Image("image/eplane3.png")};
         Enemy enemy = new Enemy(enemyBornImage, enemyRuinImage,posX, posY, speed);
         enemyArray.add(enemy);
         enemy.getAnEnemy();

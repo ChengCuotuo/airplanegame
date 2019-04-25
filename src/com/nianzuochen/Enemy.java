@@ -20,7 +20,7 @@ public class Enemy extends Pane {
     private double down;            //敌人移动的最低位置
     private double right;           //敌人移动的最右边位置
     private ImageView enemyImage;   //静态的敌机
-    private ImageView ruinImages;   //敌机被摧毁的动画
+    private ShowImages ruinImages;   //敌机被摧毁的动画
     private Polyline path;          //敌机移动的路线，使用 Polyline 折线，可以定义复杂的移动路线
     private double posX;            //敌机移动的x坐标
     private double posY;            //敌机移动的y坐标
@@ -69,7 +69,12 @@ public class Enemy extends Pane {
         });
     }
     //敌机摧毁的时候，返回敌机被摧毁的动画
-    public ImageView getRuinImages() {
+    public ImageView getRuinImages(double x, double y) {
+        super.getChildren().add(ruinImages);
+        super.getChildren().remove(enemyImage);
+        ruinImages.setX(x);
+        ruinImages.setY(y);
+        ruinImages.ruin();
         return ruinImages;
     }
 
