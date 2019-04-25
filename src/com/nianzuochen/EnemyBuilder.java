@@ -22,12 +22,13 @@ public class EnemyBuilder extends Pane {
     private double speed;               //敌机移动的速度
     private long interval;              //产生敌机的时间间隔
     private ArrayList<Enemy> enemyArray;    //生成的敌机
+    private Timeline bulletAnimation;   //生成敌机的动画
 
     public EnemyBuilder (double posX, double posY, double speed) {
         this.posX = posX;
         this.posY = posY;
         this.speed = speed;
-        this.interval = 1500;
+        this.interval = 1000;
         enemyArray = new ArrayList<>();
     }
     //生成敌机
@@ -35,7 +36,7 @@ public class EnemyBuilder extends Pane {
         EventHandler<ActionEvent> eventHandler = e -> {
             getAnEnemy();
         };
-        Timeline bulletAnimation =
+        bulletAnimation =
                 new Timeline(new KeyFrame(Duration.millis(interval), eventHandler));
         bulletAnimation.setCycleCount(Timeline.INDEFINITE);
         bulletAnimation.play();
@@ -55,5 +56,12 @@ public class EnemyBuilder extends Pane {
 
     public ArrayList<Enemy> getEnemyArray() {
         return enemyArray;
+    }
+
+    public void stopAllEnemyAnimation() {
+        bulletAnimation.stop();
+        for (Enemy enemy : enemyArray) {
+            enemy.stopAnimation();
+        }
     }
 }

@@ -1,11 +1,14 @@
 package com.nianzuochen;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 /**
@@ -26,6 +29,7 @@ public class ShowImages extends ImageView{
         this.ruinImages = ruinImages;
         this.bornIndex = 0;
         this.ruinIndex = 0;
+        this.ruinAnimation = null;
         born ();
     }
     //摧毁是动画
@@ -57,23 +61,37 @@ public class ShowImages extends ImageView{
     //飞机摧毁时候的动画
     public void ruin() {
         //初始动画停止
-       if (startAnimation != null) {
+        if (startAnimation != null) {
            startAnimation.stop();
-       }
+        }
+        //被摧毁的背景音乐
+        String musicPath =
+                getClass().getResource("/sound/enemy3_down.mp3").toString();
+        Media media = new Media(musicPath);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(1);
+        mediaPlayer.play();
+
         int length = ruinImages.length;
         //事件的功能是不断的改变 ruinImages 的图片
         EventHandler<ActionEvent> eventHandler = e -> {
-            setImage(ruinImages[ruinIndex++]);
-            if (ruinIndex == length) {
-                ruinIndex = 0;
+            if (ruinIndex >= length) {
+                setImage(null);
+            } else {
+                setImage(ruinImages[ruinIndex++]);
             }
         };
         //创建动画
         //实现每隔一秒钟改变一次图片中的内容
-        ruinAnimation = new Timeline(new KeyFrame(Duration.millis(500), eventHandler));
+        ruinAnimation = new Timeline(new KeyFrame(Duration.millis(300), eventHandler));
         //动画执行的次数是无限次
-        ruinAnimation.setCycleCount(length);
+        ruinAnimation.setCycleCount(length + 1);
         // 开始动画
         ruinAnimation.play();
+
+    }
+
+    public Timeline getRuinAnimation() {
+        return ruinAnimation;
     }
 }

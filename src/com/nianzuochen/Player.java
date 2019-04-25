@@ -29,8 +29,8 @@ public class Player extends Pane{
     private double down;            //飞机移动的最低位置
     private double right;           //飞机移动的最右边位置
     private double speed;           //飞机的速度，其实就是每次触发事件飞机的移动距离
-    private double width;           //飞机图片的宽度
-    private double height;          //飞机图片的高度
+    private double planeWidth;           //飞机图片的宽度
+    private double planeHeight;          //飞机图片的高度
     private ShowImages bornImages;  //飞机的动画效果
     private Image bullet;           //飞机发射的子弹
     private int bulletSpeed;        //子弹移动的速度
@@ -47,12 +47,12 @@ public class Player extends Pane{
         this.right = right;
 
         //这里不能使用 imageView 的 getImage().getWidth() 因为现在的 imageView 中的 image 是动态变化的
-        this.width = born[0].getWidth();
-        this.height = born[0].getHeight();
+        this.planeWidth = born[0].getWidth();
+        this.planeHeight = born[0].getHeight();
         this.speed = speed;
 
         //设置飞机位置，也就是玩家的初始位置
-        super.setPrefSize(right + width, down + height);
+        super.setPrefSize(right + planeWidth, down + planeHeight);
         plane.setX(posX);
         plane.setY(posY);
         super.getChildren().add(plane);
@@ -72,8 +72,8 @@ public class Player extends Pane{
 
     //飞机向下移动
     public void moveDown() {
-        if (posY >= down - height) {
-            posY = down - height;
+        if (posY >= down - planeHeight) {
+            posY = down - planeHeight;
         } else {
             posY += speed;
         }
@@ -90,8 +90,8 @@ public class Player extends Pane{
 
     //飞机向右移动
     public void moveRight() {
-        if (posX >= right - width) {
-            posX = right - width;
+        if (posX >= right - planeWidth) {
+            posX = right - planeWidth;
         } else {
             posX += speed;
         }
@@ -111,7 +111,7 @@ public class Player extends Pane{
             double bulletWidth = bullet.getWidth();
             double bulletHeight = bullet.getHeight();
             //计算子弹初始位置，也就是在飞机的上方中央位置
-            double bulletX = posX + (width - bulletWidth) / 2;
+            double bulletX = posX + (planeWidth - bulletWidth) / 2;
             double bulletY = posY + bulletHeight;
             Bullet bulletObj = new Bullet(bullet, bulletX, bulletY, bulletSpeed);
             super.getChildren().add(bulletObj);
@@ -177,5 +177,29 @@ public class Player extends Pane{
 
     public void setBullet(Image bullet) {
         this.bullet = bullet;
+    }
+
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+
+    public ImageView getPlane() {
+        return plane;
+    }
+
+    public double getPlaneWidth() {
+        return planeWidth;
+    }
+
+    public double getPlaneHeight() {
+        return planeHeight;
+    }
+
+    public ShowImages getBornImages() {
+        return bornImages;
     }
 }

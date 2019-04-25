@@ -72,11 +72,21 @@ public class Bullet extends Pane {
         bulletAnimation.setCycleCount((int) (bulletY / bulletSpeed));
         bulletAnimation.play();
 
+        //当子弹动画结束的时候要将子弹移除面板，还需要在记录子弹的数组中删除该节点
         bulletAnimation.setOnFinished(e -> {
             super.getChildren().remove(bullet);
+            //设置子弹的位置为 (0, 0) 标记为无效子弹
+            this.bulletX = -1;
+            this.bulletY = -1;
         });
     }
 
+    //子弹无效化
+    public void ruinBullet() {
+        //设置子弹的位置为 (0, 0) 标记为无效子弹
+        this.bulletX = -1;
+        this.bulletY = -1;
+    }
     public double getBulletX() {
         return bulletX;
     }

@@ -28,6 +28,7 @@ public class Enemy extends Pane {
     private double enemyHeigh;      //敌机图片的高度
     private double enemyWidth;      //敌机图片的宽度
     private Random random = new Random();//随机数
+    private  Timeline enemyAnimation;    //敌机移动的动画
 
     public Enemy(Image enemy, Image[] ruins, double down, double right, double speed) {
         this.down = down;
@@ -59,23 +60,38 @@ public class Enemy extends Pane {
                this.posY = positionY;
            }
         };
-        Timeline bulletAnimation =
+        enemyAnimation =
                 new Timeline(new KeyFrame(Duration.millis(100), eventHandler));
-        bulletAnimation.setCycleCount((int) ((down - enemyHeigh) / speed));
-        bulletAnimation.play();
+        enemyAnimation.setCycleCount((int) ((down - enemyHeigh) / speed));
+        enemyAnimation.play();
 
-        bulletAnimation.setOnFinished(e -> {
+        //当敌机动画停止的时候要将敌机移除面板，还需要即将存储该敌机的数组中删除它
+        enemyAnimation.setOnFinished(e -> {
             super.getChildren().remove(enemyImage);
+            //设置敌机的位置为 (0, 0) 标记为无效敌机
+            this.posX = -1;
+            this.posY = -1;
         });
     }
-    //敌机摧毁的时候，返回敌机被摧毁的动画
+    //敌机摧毁的时候，返回敌机被摧毁的动画，停止飞机移动的动画，并将敌机移除
     public ImageView getRuinImages(double x, double y) {
+        enemyAnimation.stop();
+        //设置敌机的位置为 (0, 0) 标记为无效敌机
+        this.posX = -1;
+        this.posY = -1;
+        if(super.getChildren().contains(ruinImages))  {
+            return null;
+        }
         super.getChildren().add(ruinImages);
         super.getChildren().remove(enemyImage);
         ruinImages.setX(x);
         ruinImages.setY(y);
         ruinImages.ruin();
         return ruinImages;
+    }
+
+    public void stopAnimation () {
+        enemyAnimation.stop();
     }
 
     public double getEnemyWidth() {
