@@ -38,14 +38,19 @@ public class MainPane extends Application{
         mediaPlayer.play();
 
         //玩家的图片，传递多个图片将会将所有以间隔1秒交换显示
-        Image[] bornImages = {new Image("image/player1.png"), new Image("image/player2.png")};
-        Image[] ruinImages = {new Image("image/playerdown1.png"),
+        Image[] playerBornImages = {new Image("image/player1.png"), new Image("image/player2.png")};
+        Image[] playerRuinImages = {new Image("image/playerdown1.png"),
                 new Image("image/playerdown2.png"), new Image("image/playerdown3.png")};
         //生成玩家对象
-        player = new Player(bornImages, ruinImages, 200, 500,
-                500 + bornImages[0].getHeight(), 450 + bornImages[0].getWidth(), 8);
+        player = new Player(playerBornImages, playerRuinImages, 200, 500,
+                500 + playerBornImages[0].getHeight(), 450 + playerBornImages[0].getWidth(), 8);
         //为玩家的飞机设置子弹
         player.setBullet(new Image("image/playerbullet.png"));
+
+        EnemyBuilder enemyBuilder = new EnemyBuilder( 500 + playerBornImages[0].getHeight(),
+                450 + playerBornImages[0].getWidth(), 10);
+        mainPane.getChildren().add(enemyBuilder);
+        enemyBuilder.getEnemys();
 
         //将玩家添加到主面板中
         mainPane.getChildren().add(player);
@@ -57,12 +62,13 @@ public class MainPane extends Application{
         //发射子弹应该还有背景音乐，也是有点击触发的
         //player.launch();
         //添加点击时间，当点击空格的时候发射子弹
-        planeController();
+        player.planeController();
+        player.bulletMusic();
 
 
         //添加在幕布中，同时指定幕布的大小
-        Scene scene = new Scene(mainPane, 450 + bornImages[0].getWidth(),
-                500 + bornImages[0].getHeight());
+        Scene scene = new Scene(mainPane, 450 + playerBornImages[0].getWidth(),
+                500 + playerBornImages[0].getHeight());
         //设置标题
         primaryStage.setTitle("飞机大战");
         primaryStage.setScene(scene);
@@ -71,56 +77,6 @@ public class MainPane extends Application{
         //舞台（窗体）显示
         primaryStage.show();
         //主面板获得焦点，这样按键才会有效
-        mainPane.requestFocus();
-    }
-    //使用上下左右键控制飞机飞行方向
-    //控制飞机子弹
-    public void planeController() {
-        mainPane.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case W:
-                    player.moveUp(); player.changePos();
-                    break;
-                case S:
-                    player.moveDown(); player.changePos();
-                    break;
-                case A:
-                    player.moveLeft(); player.changePos();
-                    break;
-                case D:
-                    player.moveRight(); player.changePos();
-                    break;
-                case SPACE:
-                    player.launch();
-                    bulletMusic();
-                    break;
-            }
-        });
-        //当键盘释放的时候也触发移动事件体验更好，更流畅
-        mainPane.setOnKeyReleased(e -> {
-            switch (e.getCode()) {
-                case W:
-                    player.moveUp(); player.changePos();
-                    break;
-                case S:
-                    player.moveDown(); player.changePos();
-                    break;
-                case A:
-                    player.moveLeft(); player.changePos();
-                    break;
-                case D:
-                    player.moveRight(); player.changePos();
-                    break;
-            }
-        });
-    }
-
-    //当点击发射子弹的时候也应该有音乐
-    public void bulletMusic () {
-        String musicPath =
-                getClass().getResource("/sound/bullet.mp3").toString();
-        Media media = new Media(musicPath);
-        MediaPlayer bulletLaunch = new MediaPlayer(media);
-        bulletLaunch.play();
+        player.requestFocus();
     }
 }

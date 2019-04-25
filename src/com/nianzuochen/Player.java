@@ -11,6 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
@@ -32,9 +34,10 @@ public class Player extends Pane{
     private ShowImages bornImages;  //飞机的动画效果
     private Image bullet;           //飞机发射的子弹
     private int bulletSpeed;        //子弹移动的速度
-    private ArrayList<Point2D> bullts;       //存放子弹的位置
+    private ArrayList<Bullet>  bullets;//飞机发射的子弹
 
-    public Player(Image[] born, Image[] ruin, double posX, double posY, double down, double right, double speed) {
+    public Player(Image[] born, Image[] ruin, double posX, double posY,
+                  double down, double right, double speed) {
         bornImages = new ShowImages(born, ruin);
         this.plane = bornImages;
 
@@ -48,13 +51,14 @@ public class Player extends Pane{
         this.height = born[0].getHeight();
         this.speed = speed;
 
-        //设置图片，也就是玩家的初始位置
+        //设置飞机位置，也就是玩家的初始位置
         super.setPrefSize(right + width, down + height);
         plane.setX(posX);
         plane.setY(posY);
         super.getChildren().add(plane);
-        bullts = new ArrayList<>();
+
         this.bulletSpeed = 20;   //子弹的默认速度
+        bullets = new ArrayList<>();
     }
 
     //飞机向上移动
@@ -99,62 +103,76 @@ public class Player extends Pane{
         plane.setY(posY);
     }
 
-    //飞机发射子弹动画，如果没有指定的话，将不进行此动画
     public void launch() {
-        //没有指定子弹照片
         if (bullet == null) {
-            return ;
+            return;
+        } else {
+            //获取子弹照片的大小，飞机此时的坐标
+            double bulletWidth = bullet.getWidth();
+            double bulletHeight = bullet.getHeight();
+            //计算子弹初始位置，也就是在飞机的上方中央位置
+            double bulletX = posX + (width - bulletWidth) / 2;
+            double bulletY = posY + bulletHeight;
+            Bullet bulletObj = new Bullet(bullet, bulletX, bulletY, bulletSpeed);
+            super.getChildren().add(bulletObj);
+            bullets.add(bulletObj);
+            //发射子弹
+            bulletObj.launch();
         }
-        //指定子弹的照片
-        //获取子弹照片的大小，飞机此时的坐标
-        double bulletWidth = bullet.getWidth();
-        double bulletHeight = bullet.getHeight();
-        //计算子弹初始位置，也就是在飞机的上方中央位置
-        double bulletX = posX + (width - bulletWidth) / 2;
-        double bulletY = posY + bulletHeight;
-        //将子弹添加到面板中
-        ImageView bulletImageView = new ImageView(bullet);
-        super.getChildren().add(bulletImageView);
-        bulletImageView.setX(bulletX);
-        bulletImageView.setY(bulletY);
-        Point2D position = new Point2D(bulletX, bulletY);
-        bullts.add(position);
-        //子弹由初始位置移动值面板的最顶端
-        // 产生多个子弹是不是需要使用多线程？先不使用试试
-//        //动画使用的是路线动画， 路线就是从当前位置到面板的顶端
-//        Line path = new Line(bulletX, bulletY, bulletX, 0);
-//        PathTransition bulletAnimation =
-//                new PathTransition(Duration.millis(3000), path, bulletImageView);
+    }
 
-        //如何获取子弹的移动的坐标，如下方法不行，只能自己写 Timeline 动画
-//        EventHandler<ActionEvent> printPosition = e-> {
-//            Line line = (Line)bulletAnimation.getPath();
-//            System.out.println(line.getLayoutY());
-//        };
-//        Timeline printAnimation = new Timeline(new KeyFrame(Duration.millis(100), printPosition));
-//        printAnimation.setCycleCount(Timeline.INDEFINITE);
-//
-//        printAnimation.play();
-//        bulletAnimation.play();
-//        //当动画结束的时候需要将子弹照片移除
-//        bulletAnimation.setOnFinished(e -> {
-//            super.getChildren().remove(bulletImageView);
-//        });
-
-        //使用  PathTransition 并不能获取子弹的移动位置，也就无法计算摧毁敌机的时间
-        EventHandler<ActionEvent> eventHandler = e -> {
-            double positionY = bulletImageView.getY() - bulletSpeed;
-            if (positionY > 0) {
-                bulletImageView.setY(positionY);
-                //bulletImageView.setX(bulletX);
+    //使用上下左右键控制飞机飞行方向
+    //控制飞机子弹
+    public void planeController() {
+        super.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case W:
+                    moveUp(); changePos();
+                    break;
+                case S:
+                    moveDown(); changePos();
+                    break;
+                case A:
+                    moveLeft(); changePos();
+                    break;
+                case D:
+                    moveRight(); changePos();
+                    break;
+                case SPACE:
+                    launch();
+                    bulletMusic();
+                    break;
             }
-        };
-        Timeline bulletAnimation = new Timeline(new KeyFrame(Duration.millis(100), eventHandler));
-        bulletAnimation.setCycleCount((int) (bulletY / bulletSpeed));
-        bulletAnimation.play();
-        bulletAnimation.setOnFinished(e -> {
-            super.getChildren().remove(bulletImageView);
         });
+        //当键盘释放的时候也触发移动事件体验更好，更流畅
+        super.setOnKeyReleased(e -> {
+            switch (e.getCode()) {
+                case W:
+                    moveUp(); changePos();
+                    break;
+                case S:
+                    moveDown(); changePos();
+                    break;
+                case A:
+                    moveLeft(); changePos();
+                    break;
+                case D:
+                    moveRight(); changePos();
+                    break;
+            }
+        });
+    }
+
+    //当点击发射子弹的时候也应该有音乐
+    public void bulletMusic () {
+        String musicPath =
+                getClass().getResource("/sound/bullet.mp3").toString();
+        Media media = new Media(musicPath);
+        MediaPlayer bulletLaunch = new MediaPlayer(media);
+        bulletLaunch.play();
+    }
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
     }
 
     public void setBullet(Image bullet) {
