@@ -25,7 +25,8 @@ public class Enemy extends Pane {
     private double posX;            //敌机移动的x坐标
     private double posY;            //敌机移动的y坐标
     private double speed;           //敌机移动的速度
-    private double heigh;           //敌机图片的高度
+    private double enemyHeigh;      //敌机图片的高度
+    private double enemyWidth;      //敌机图片的宽度
     private Random random = new Random();//随机数
 
     public Enemy(Image enemy, Image[] ruins, double down, double right, double speed) {
@@ -36,7 +37,8 @@ public class Enemy extends Pane {
         this.posX = 0.0;
         this.posY = 0.0;
         this.speed = speed;
-        this.heigh = enemy.getHeight();
+        this.enemyHeigh = enemy.getHeight();
+        this.enemyWidth = enemy.getWidth();
         //被摧毁的时候需要调用 ruinImages.ruin() 方法
     }
     // 获取一个敌机
@@ -59,7 +61,7 @@ public class Enemy extends Pane {
         };
         Timeline bulletAnimation =
                 new Timeline(new KeyFrame(Duration.millis(100), eventHandler));
-        bulletAnimation.setCycleCount((int) ((down - heigh) / speed));
+        bulletAnimation.setCycleCount((int) ((down - enemyHeigh) / speed));
         bulletAnimation.play();
 
         bulletAnimation.setOnFinished(e -> {
@@ -69,5 +71,21 @@ public class Enemy extends Pane {
     //敌机摧毁的时候，返回敌机被摧毁的动画
     public ImageView getRuinImages() {
         return ruinImages;
+    }
+
+    public double getEnemyWidth() {
+        return enemyWidth;
+    }
+
+    public double getEnemyHeigh() {
+        return enemyHeigh;
+    }
+
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
     }
 }

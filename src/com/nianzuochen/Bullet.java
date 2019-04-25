@@ -14,12 +14,14 @@ public class Bullet extends Pane {
     private ImageView bullet;       //子弹照片
     private double bulletX;         //子弹的 x 坐标
     private double bulletY;         //子弹的 y 坐标
+    private double bulletWidth;     //子弹图片的宽度
     private int bulletSpeed;        //子弹的速度
 
     public Bullet (Image bullet, double bulletX, double bulletY, int bulletSpeed) {
         this.bullet = new ImageView(bullet);
         this.bulletX = bulletX;
         this.bulletY = bulletY;
+        this.bulletWidth = bullet.getWidth();
         this.bulletSpeed = bulletSpeed;
     }
 
@@ -81,4 +83,6 @@ public class Bullet extends Pane {
     public double getBulletY() {
         return bulletY;
     }
+
+    public double getBulletWidth () { return bulletWidth; }
 }

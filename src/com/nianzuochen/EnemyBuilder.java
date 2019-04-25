@@ -14,8 +14,7 @@ import java.util.EventListener;
 
 /**
  * Created by lei02 on 2019/4/25.
- * 生成敌机的管理
- * 类
+ * 生成敌机的管理类
  */
 public class EnemyBuilder extends Pane {
     private double posX;                //敌机移动的x坐标
@@ -53,5 +52,9 @@ public class EnemyBuilder extends Pane {
         enemy.getAnEnemy();
         enemy.attack();
         super.getChildren().add(enemy);
+    }
+
+    public ArrayList<Enemy> getEnemyArray() {
+        return enemyArray;
     }
 }
